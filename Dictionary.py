@@ -1,5 +1,6 @@
 from random import choice
 
+
 class Dictionary:
     def __init__(self):
         with open("dictionary.txt", "r", encoding="utf-8") as file:
@@ -8,8 +9,7 @@ class Dictionary:
             self.longest = self.find_longest()
             self.shortest = self.find_shortest()
             # print(self.word_list)
-    
-    
+
     def choose(self, difficulty: int) -> str:
         list_copy = []
         for word in self.word_list:
@@ -19,15 +19,13 @@ class Dictionary:
         if len(list_copy) < 1:
             return ""
         return choice(list_copy)
-    
-    
+
     def find_longest(self):
         longest = 0
         for word in self.word_list:
             if len(word) > longest:
                 longest = len(word)
         return longest
-    
 
     def find_shortest(self):
         shortest = self.longest
@@ -35,11 +33,12 @@ class Dictionary:
             if len(word) < shortest:
                 shortest = len(word)
         return shortest
-    
+
+
 if __name__ == "__main__":
     Dct = Dictionary()
-    word = Dct.choose(10)
-    if word == "":
+    chosen = Dct.choose(10)
+    if chosen == "":
         print("Brak 10-literowych słów w słowniku")
     else:
-        print(word)
+        print(chosen)
