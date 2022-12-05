@@ -16,7 +16,6 @@ class Engine:
         # Game variables
         self.secret_word = ""
         self.previous_guesses = []
-        self.player_input = ""
     
         
     def main(self):
@@ -46,6 +45,65 @@ class Engine:
         print("2 - Zasady Gry")
         print("3 - Ustawienia")
         print("4 - Koniec")
+        
+        
+    def settings_screen(self):
+        self.settings_command()
+    
+    
+    def show_settings(self):
+        print(f"Poziom trudności: {self.difficulty}")
+        print(f"Liczba prób: {self.tries}")
+        print(f"\nWpisz 'trudność' aby zmienić poziom trudności\nWpisz 'próby' aby zmienić liczbę prób\nWpisz 'powrót' aby wrócić do menu głównego")
+        
+        
+    def settings_command(self):
+        settings = True
+        while settings:
+            self.show_settings()
+            cmd = input("> ")
+            if cmd.lower() == "trudność":
+                while True:
+                    try:
+                        self.difficulty = int(input(f"Ile liter ma mieć hasło? (nie więcej niż {self.dict.longest})\n> "))
+                        self.fix_long_shor()
+                        break
+                    except:
+                        print("Proszę wpisać liczbę.")
+            if cmd.lower() == "próby":
+                while True:
+                    try:
+                        self.tries = int(input(f"Ile prób chcesz mieć?\n> "))
+                        self.fix_tries()
+                        break
+                    except:
+                        print("Proszę wpisać liczbę.")
+            if cmd.lower() == "powrót":
+                settings = False
+            
+    
+    def fix_tries(self):
+        if self.tries < 1:
+            print("Przekroczono minimalną liczbę prób; automatycznie ustawiono liczbę prób na 1.")
+            self.tries = 1
+    
+
+    def rules_screen(self):
+        print("""Bulls & Cows to tekstowa gra w której komputer losuje słowo, które jest izogramem (słowem, w którym żadna litera nie występuje więcej niż raz), a zadaniem gracza jest zgadnąć słowo wylosowane przez komputer.
+Gracz zna długość ukrytego słowa a po każdej próbie odgadnięcia go informowany jest o liczbie liter w odpowiedzi, 
+które znajdują się w wylosowanym słowie, jednak na innej pozycji niż w odpowiedzi (cows)
+oraz informowany jest o ilości liter, które znajdują się w odpowiedzi na tej samej pozycji co w odpowiedzi (bulls). 
+Gracz widzi również ile prób odpowiedzi mu pozostało.
+Gra kończy się w momencie w którym ilość bulls zrówna się z długością ukrytego słowa (co oznacza, że gracz odnalazł ukryte słowo) lub gdy liczba prób spadnie do wartości 0.\n\n""")
+    
+    
+    def fix_long_shor(self):
+        if self.difficulty > self.dict.longest:
+            print("Przekroczono maksymalną liczbę liter; automatycznie ustawiono maksymalną dopuszczalną wartość.")
+            self.difficulty = self.dict.longest
+        if self.difficulty < self.dict.shortest:
+            print("Przekroczono minimalną liczbę liter; automatycznie ustawiono minimalną dopuszczalną wartość.")
+            self.difficulty = self.dict.shortest
     
         
     def game_screen(self):
