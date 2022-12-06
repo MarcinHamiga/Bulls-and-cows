@@ -60,7 +60,8 @@ class Engine:
             print("Zapisz wynik: Nie")
         print(f"\nWpisz 'trudność' aby zmienić poziom trudności\nWpisz 'próby' aby zmienić liczbę prób\n"
               f"Wpisz 'powrót' aby wrócić do menu głównego\nWpisz 'dodaj' aby dodać własne słowo do słownika\n"
-              f"Wpisz 'najlepsze' aby włączyć/wyłączyć zapisywanie wyników do pliku tekstowego.")
+              f"Wpisz 'najlepsze' aby włączyć/wyłączyć zapisywanie wyników do pliku tekstowego."
+              f"\nWpisz 'słownik' aby wyświetlić zbiór wszystkich słów które mogą wystąpić.")
 
     def settings_command(self):
         settings = True
@@ -89,6 +90,8 @@ class Engine:
                 self.add_word()
             if cmd.lower() == "najlepsze":
                 self.config_save_score()
+            if cmd.lower() == "słownik":
+                self.show_dictionary()
 
     def config_save_score(self):
         if self.save_score is True:
@@ -121,6 +124,15 @@ class Engine:
             print("Przekroczono minimalną liczbę prób; automatycznie ustawiono liczbę prób na 1.")
             self.tries = 1
 
+    def show_dictionary(self):
+        x = 0
+        for word in self.dict.word_list:
+            if x % 5 == 0:
+                print()
+            print(word, end=' ')
+            x += 1
+        print("\n")
+
     def rules_screen(self):
         print("""Bulls & Cows to tekstowa gra w której komputer losuje słowo, które jest izogramem (słowem, w którym żadna litera nie występuje więcej niż raz), a zadaniem gracza jest zgadnąć słowo wylosowane przez komputer.
 Gracz zna długość ukrytego słowa a po każdej próbie odgadnięcia go informowany jest o liczbie liter w odpowiedzi, 
@@ -148,7 +160,7 @@ Gra kończy się w momencie w którym ilość bulls zrówna się z długością 
                 if isinstance(result, Stats):
                     break
                 else:
-                    print("Wprowadz odpowiedź zawierającą WYŁĄCZNIE litery")       
+                    print("Wprowadz odpowiedź zawierającą WYŁĄCZNIE litery")
             result.show_stats()
             self.take_try()
             if self.check_win(result) == 1:
@@ -174,7 +186,7 @@ Gra kończy się w momencie w którym ilość bulls zrówna się z długością 
             input("---Naciśnij enter aby wrócić do menu głównego---")
             return 1
         else:
-            return 0   
+            return 0
 
     def take_input(self):
         while True:
