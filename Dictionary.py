@@ -34,6 +34,10 @@ class Dictionary:
                 shortest = len(word)
         return shortest
 
+    def update_shor_long(self):
+        self.longest = self.find_longest()
+        self.shortest = self.find_shortest()
+
 
 if __name__ == "__main__":
     Dct = Dictionary()

@@ -2,12 +2,14 @@ from Dictionary import Dictionary
 from Validator import Validator
 from Stats import Stats
 import datetime
+import io
 
 
 class Engine:
     def __init__(self):
+
+        # logic variables
         self.dict = Dictionary()
-        print(self.dict.word_list)
         self.validator = Validator()
         self.is_running = True
 
@@ -16,9 +18,9 @@ class Engine:
         self.tries = 10
         self.tries_left = 10
         self.save_score = False
+
         # Game variables
         self.secret_word = ""
-        self.previous_guesses = []
 
     def main(self):
         while self.is_running:
@@ -71,7 +73,7 @@ class Engine:
                         self.difficulty = int(input(f"Ile liter ma mieć hasło? (nie więcej niż {self.dict.longest})\n> "))
                         self.fix_long_shor()
                         break
-                    except:
+                    except ValueError:
                         print("Proszę wpisać liczbę.")
             if cmd.lower() == "próby":
                 while True:
@@ -79,7 +81,7 @@ class Engine:
                         self.tries = int(input(f"Ile prób chcesz mieć?\n> "))
                         self.fix_tries()
                         break
-                    except:
+                    except ValueError:
                         print("Proszę wpisać liczbę.")
             if cmd.lower() == "powrót":
                 settings = False
@@ -97,6 +99,8 @@ class Engine:
     def add_word(self):
         while True:
             word = input("Wpisz słowo które chcesz dodać.\n> ")
+            if word == r"\powrót":
+                break
             word = self.validator.check_for_illegal(word)
             if word is None:
                 print("Wpisz słowo które zawiera WYŁĄCZNIE litery.")
@@ -105,9 +109,11 @@ class Engine:
             elif word in self.dict.word_list:
                 print("Podane słowo już jest w słowniku.")
             else:
-                with open("dictionary.txt", "a") as file:
-                    file.write(f" {word}".rstrip('\n'))
+                with io.open("dictionary.txt", "a", encoding="utf-8") as file:
+                    string = f" {word}".rstrip('\n')
+                    file.write(string)
                 self.dict.word_list.append(word)
+                self.dict.update_shor_long()
                 break
 
     def fix_tries(self):
@@ -132,7 +138,6 @@ Gra kończy się w momencie w którym ilość bulls zrówna się z długością 
             self.difficulty = self.dict.shortest
 
     def game_screen(self):
-        print(self.secret_word)
         while True:
             if self.check_lose() == 1:
                 break
@@ -164,7 +169,7 @@ Gra kończy się w momencie w którym ilość bulls zrówna się z długością 
             return 0
 
     def check_lose(self):
-        if self.tries == 0:
+        if self.tries_left == 0:
             print("Przegrałeś!")
             input("---Naciśnij enter aby wrócić do menu głównego---")
             return 1
