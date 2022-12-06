@@ -1,14 +1,21 @@
 from random import choice
+from Validator import Validator
+from Exceptions import IllegalWord, NotAnIsogram
 
 
 class Dictionary:
     def __init__(self):
+        validator = Validator()
         with open("dictionary.txt", "r", encoding="utf-8") as file:
             self.word_list = file.read()
             self.word_list = self.word_list.split()
             self.longest = self.find_longest()
             self.shortest = self.find_shortest()
-            # print(self.word_list)
+            for word in self.word_list:
+                if validator.validate(word) == -1:
+                    raise NotAnIsogram(f"A non-isogram was inserted into the dictionary.txt file. Remove it and try again. Illegal word: {word}")
+                if validator.check_for_illegal(word) is None:
+                    raise IllegalWord(f"An illegal word was inserted into the dictionary.txt file. Remove it and try again. Illegal word: {word}")
 
     def choose(self, difficulty: int) -> str:
         list_copy = []
